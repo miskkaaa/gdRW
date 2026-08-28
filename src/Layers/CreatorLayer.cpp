@@ -334,7 +334,7 @@ bool RECreatorLayer::init() {
         v113 = 26112;
         v114 = -1;
         v8->setColor(&v8->cocos2d::CCRGBAProtocol, (const cocos2d::ccColor3B *)&v113);
-        v14 = (cocos2d::CCNode *)cocos2d::CCMenu::create(v13);
+        v14 = (cocos2d::CCMenu::create(v13);
         a1->addChild_1(a1, v14);
         v15 = cocos2d::CCSprite::createWithSpriteFrameName("GJ_searchBtn_001.png");
         v16 = fmaxf(0.89999998, (float)(v118 - 100.0) / (float)((float)(v15->m_obRect.size.width * 0.80000001) + 360.0));
@@ -344,20 +344,24 @@ bool RECreatorLayer::init() {
         cocos2d::CCPoint::CCPoint(&v116, v118 * 0.5, v119 * 0.5);
         cocos2d::CCNode::convertToNodeSpace(v14, &v121);
     */
-    float scaleF = fmaxf(0.89999998f, (ws.height - 100.f) / (searchWidth * 0.80000001f + 360.0f));
-    log::info("{}",scaleF);
+    float scaleF = fmaxf(
+        0.89999998f,
+        (ws.width - 100.f) / (searchWidth * 0.80000001f + 360.0f)
+    );
+    log::info("{}", scaleF);
     // v16 = fmaxf(0.89999998, (float)(v118 - 100.0) / (float)((float)(v15->m_obRect.size.width * 0.80000001) + 360.0));
     // like what the actual fuck
-    scaleF = std::min(scaleF, 1.0f);
+    scaleF = std::min(scaleF, 1.0f) - 0.0065f;
 
-    // if (scaleF > 1.0f) scaleF = 1.0f;
+    float buttonScale = 0.8f * scaleF;
     float spacing = scaleF * 90.f;
 
     log::info(
-        "width={} searchWidth={} scaleF={} spacing={}",
+        "width={} searchWidth={} scaleF={} buttonScale={} spacing={}",
         ws.width,
         searchWidth,
         scaleF,
+        buttonScale,
         spacing
     );
 
@@ -413,7 +417,7 @@ bool RECreatorLayer::init() {
 
         if (!spr) continue;
 
-        spr->setScale(scaleF);
+        spr->setScale(buttonScale);
         auto btn = CCMenuItemSpriteExtra::create(
             spr, nullptr, this, buttons[i].sel
         );
@@ -421,10 +425,19 @@ bool RECreatorLayer::init() {
         int col = i % 5;
         int row = i / 5;
 
-        float posX = (col - 2.0f) * spacing;
-        float posY = -(row - 1.0f) * spacing;
+        auto center = CCPoint{
+            ws.width * 0.5f,
+            ws.height * 0.5f
+        };
 
-        btn->setPosition(menu->convertToNodeSpace({ws.width * 0.5f + posX, ws.height * 0.5f + posY}));
+        auto menuCenter = menu->convertToNodeSpace(center);
+
+        CCPoint offset{
+            (col - 1.5f) * spacing - spacing * 0.5f,
+            -(floorf(row) - 1.0f) * spacing
+        };
+
+        btn->setPosition(menuCenter + offset);
         menu->addChild(btn);
 
         if (buttons[i].iQ) {
@@ -444,7 +457,7 @@ bool RECreatorLayer::init() {
     Helper::sideart(this, {0.0f, 1.0f}, {dir->getScreenLeft() - 1.0f, dir->getScreenTop() + 1.0f}, false, true, -1);
 
     int diamonds = GameStatsManager::sharedState()->getStat("13");
-    const char* vaultf = (diamonds >= 50) ? "GJ_lock_open_001.png" : "GJ_lock_001.png";
+    const char* vaultf = (diamonds >= 50) ? "GJ_lock_open_001.png" : "GJ_lockGray_001.png";
     auto vault = CCSprite::createWithSpriteFrameName(vaultf);
     auto vaultB = CCMenuItemSpriteExtra::create(
         vault, nullptr, this, menu_selector(CreatorLayer::onSecretVault)
@@ -452,28 +465,28 @@ bool RECreatorLayer::init() {
     vaultB->setPosition(menu->convertToNodeSpace({ws.width - 22.0f, ws.height - 18.0f}));
     menu->addChild(vaultB);
 
-    if (diamonds > 50) {
+    if (diamonds <= 49) {
         float h = vault->getContentSize().height;
         float w = vault->getContentSize().width;
 
         auto icon = CCSprite::createWithSpriteFrameName("GJ_diamondsIcon_001.png");
         icon->setPosition({
             w * 0.5f + 9.0f,
-            h * 0.5f - 23.0f
+            h * 0.5f - 1.0f
         });
-        icon->setScale(0.8f);
+        icon->setScale(0.7f);
         vault->addChild(icon);
 
         auto count = CCLabelBMFont::create("50", "bigFont.fnt");
         count->setPosition({
             w * 0.5f - 8.5f,
-            h * 0.5f - 22.0f
+            h * 0.5f
         });
-        count->setScale(0.5f);
+        count->setScale(0.4f);
         vault->addChild(count);
     }
 
-    bool unlocked = GameManager::sharedState()->getUGV("1");
+    bool unlocked = GameManager::sharedState()->getUGV("5");
     const char* door = unlocked ? "secretDoorBtn_open_001.png" : "secretDoorBtn_closed_001.png";
     m_secretDoorSprite = CCSprite::createWithSpriteFrameName(door);
 

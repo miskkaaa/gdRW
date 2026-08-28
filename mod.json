@@ -11,6 +11,7 @@
 	"version": "v1.0.0",
 	"developer": "miskaa",
 	"description": "Geometry Dash Rewrite",
+	"early-load": true,
 	"settings": {
 		"titel": {
 			"type": "title",
