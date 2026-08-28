@@ -10,7 +10,6 @@
 // #include <Geode/binding/GameStatsManager.hpp>
 
 #include "../Helpers.hpp"
-#include <Geode/Enums.hpp>
 
 void RECreatorLayer::checkQuestsStatus() {
     if (!Helper::s("CLcheckQuestsStatus")) {
@@ -150,6 +149,15 @@ void RECreatorLayer::onEventLevel(CCObject* sender) {
     if (page) page->show();
 }
 
+void RECreatorLayer::onWeeklyLevel(CCObject* sender) {
+    if (!Helper::s("CLonWeeklyLevel")) {
+        CreatorLayer::onWeeklyLevel(sender);
+        return;
+    }
+    auto page = DailyLevelPage::create(GJTimedLevelType::Weekly);
+    if (page) page->show();
+}
+
 void RECreatorLayer::onFeaturedLevels(CCObject* sender) {
     if (!Helper::s("CLonFeaturedLevels")) {
         CreatorLayer::onFeaturedLevels(sender);
@@ -171,6 +179,89 @@ void RECreatorLayer::onGauntlets(CCObject* sender) {
     auto scene = GauntletSelectLayer::scene(1);
     auto trans = CCTransitionFade::create(0.5f, scene);
     CCDirector::sharedDirector()->pushScene(trans);
+}
+
+void RECreatorLayer::onMultiplayer(CCObject* sender) {
+    if (!Helper::s("CLonMultiplayer")) {
+        CreatorLayer::onMultiplayer(sender);
+        return;
+    }
+    auto title = "Erymanthos";
+    auto text = "Versus mode has been <co>delayed</c>,\nbut it's in the works!";
+    // REMINDER: rename title's and fix case 5 :3
+    int bullshit = 2;
+
+    switch (m_versusDialogIndex) {
+        case 1:
+            text = "Yea<d010>.<d010>.<d010>. It's still <cl>delayed</c>.";
+            title = "Erymanthos";
+            bullshit = 2;
+            break;
+        case 2:
+            text = "I blame <cg>RobTop</c>.";
+            title = "Erymanthuses Brother";
+            bullshit = 10;
+            break;
+        case 3:
+            text = "Who else could we <cr>blame</c>?\nWe're not even real.";
+            title = "Erymanthos";
+            bullshit = 2;
+            break;
+        case 4:
+            text = "Speak for yourself <co>I'm real!</c>";
+            title = "Erymanthuses Brother";
+            bullshit = 14;
+            break;
+        case 5:
+            text = "<cl>Yea, a real pain in the<d010>.<d010>.<d010>. ass</c>";
+            title = "Erymanthos";
+            bullshit = 2;
+            break;
+        case 6:
+            text = "You're just <cr>mad</c> because you don't have a <cy>shop</c>.";
+            title = "Erymanthuses Brother";
+            bullshit = 26;
+            break;
+        case 7:
+            text = "You have a <cy>shop</c>?";
+            title = "Erymanthos";
+            bullshit = 4;
+            break;
+        case 8:
+            text = "<co>I HAVE SAID TOO MUCH!\nQUICKLY TO THE <i050><s260>CHOPPER!</s></i></c>";
+            title = "Erymanthuses Brother";
+            bullshit = 10;
+            break;
+        case 9:
+            text = "You don't have a chop<d010>.<d010>.<d010>.";
+            title = "Erymanthos";
+            bullshit = 2;
+            break;
+        case 10:
+            text = ".<d010>.<d010>.";
+            title = "Erymanthuses Brother";
+            bullshit = 52;
+            break;
+        case 11:
+            text = ".<d010>.<d010>.<d010>.<d010>.";
+            title = "Erymanthos";
+            bullshit = 17;
+            break;
+        default:
+            break;
+    }
+
+    auto layerObj = DialogObject::create(title, text, bullshit, 1.0f, false, {255, 255, 255});
+    auto layer = DialogLayer::create(layerObj, 2);
+    this->addChild(layer, 100);
+
+    auto ws = CCDirector::sharedDirector()->getWinSize();
+    if (layer->m_mainLayer) layer->m_mainLayer->setPosition(ws * 0.5f);
+
+    layer->animateInRandomSide();
+
+    m_versusDialogIndex++;
+    if (m_versusDialogIndex > 11) m_versusDialogIndex = 0;
 }
 
 CCScene* RECreatorLayer::scene() {

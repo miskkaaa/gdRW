@@ -85,6 +85,16 @@
 			"name": "CreatorLayer onGauntlets",
 			"default": false
 		},
+		"CLonWeekly": {
+			"type": "bool",
+			"name": "CreatorLayer onWeekly",
+			"default": false
+		},
+		"CLonMultiplayer": {
+			"type": "bool",
+			"name": "CreatorLayer onMultiplayer",
+			"default": false
+		},
 		"CLscene": {
 			"type": "bool",
 			"name": "CreatorLayer scene",

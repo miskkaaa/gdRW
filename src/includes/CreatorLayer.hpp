@@ -17,6 +17,8 @@ class $modify(RECreatorLayer, CreatorLayer) {
     void onEventLevel(CCObject* sender);
     void onFeaturedLevels(CCObject* sender);
     void onGauntlets(CCObject* sender);
+    void onMultiplayer(CCObject* sender);
+    void onWeeklyLevel(CCObject* sender);
 
     CCScene* scene();
     CreatorLayer* create();
