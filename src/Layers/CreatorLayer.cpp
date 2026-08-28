@@ -254,9 +254,13 @@ bool RECreatorLayer::init() {
                 buttons[i].frame
             );
 
+            #ifdef GEODE_IS_WINDOWS
             gray->m_luminance._Elems[0] = 0.33f;
             gray->m_luminance._Elems[1] = 0.33f;
             gray->m_luminance._Elems[2] = 0.33f;
+            #else
+            gray->setEvenLuminance(0.33f);
+            #endif
 
             gray->setColor({175, 175, 175});
 
