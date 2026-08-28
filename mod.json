@@ -1,0 +1,84 @@
+{
+	"geode": "5.9.0",
+	"gd": {
+		"win": "2.2081",
+		"android": "2.2081",
+		"mac": "2.2081",
+		"ios": "2.2081"
+	},
+	"id": "miskaa.gdrw",
+	"name": "gdRW",
+	"version": "v1.0.0",
+	"developer": "miskaa",
+	"description": "Geometry Dash Rewrite",
+	"settings": {
+		"titel": {
+			"type": "title",
+			"name": "Main Settings",
+			"description": "enable or disable settings"
+		},
+		
+		"themasterswitch": {
+			"type": "bool",
+			"name": "The Master Switch.",
+			"description": "true is on false is off whatever",
+			"default": true
+		},
+
+		"creatorlayertitle": {
+			"type": "title",
+			"name": "Creator Layer",
+			"description": "Most of these are off by default.\n\ninit, scene, create etc. are only hooks, they will call the original functions yada yada"
+		},
+		"CLinit": {
+			"type": "bool",
+			"name": "CreatorLayer init",
+			"default": false
+		},
+		"CLcheckQuestsStatus": {
+			"type": "bool",
+			"name": "CreatorLayer checkQuestsStatus",
+			"default": false
+		},
+		"CLdialogClosed": {
+			"type": "bool",
+			"name": "CreatorLayer dialogClosed",
+			"default": false
+		},
+		"CLkeyBackClicked": {
+			"type": "bool",
+			"name": "CreatorLayer keyBackClicked",
+			"default": false
+		},
+		"CLonBack": {
+			"type": "bool",
+			"name": "CreatorLayer onBack",
+			"default": false
+		},
+		"CLonAdventureMap": {
+			"type": "bool",
+			"name": "CreatorLayer onAdventureMap",
+			"default": false
+		},
+		"CLonChallenge": {
+			"type": "bool",
+			"name": "CreatorLayer onChallenge",
+			"default": false
+		},
+		"CLonDailyLevel": {
+			"type": "bool",
+			"name": "CreatorLayer onDailyLevel",
+			"default": false
+		},
+		"CLscene": {
+			"type": "bool",
+			"name": "CreatorLayer scene",
+			"default": false
+		},
+		"CLcreate": {
+			"type": "bool",
+			"name": "CreatorLayer create",
+			"default": false
+		}
+	}
+}
