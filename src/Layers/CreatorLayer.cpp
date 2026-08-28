@@ -10,6 +10,7 @@
 // #include <Geode/binding/GameStatsManager.hpp>
 
 #include "../Helpers.hpp"
+#include <Geode/Enums.hpp>
 
 void RECreatorLayer::checkQuestsStatus() {
     if (!Helper::s("CLcheckQuestsStatus")) {
@@ -107,7 +108,7 @@ void RECreatorLayer::onAdventureMap(CCObject* sender) {
         CreatorLayer::onChallenge(sender);
         return;
     }
-    auto page = GJPromoPopup::create("promo_boom.png");
+    auto page = GJPromoPopup::create("mapPromo.png");
     // i should remember that i should use
     // "mapPromo.png"
     // instead of "promo_boom.png" lmfao
@@ -140,6 +141,38 @@ void RECreatorLayer::onDailyLevel(CCObject* sender) {
     log::info("gay 3");
 }
 
+void RECreatorLayer::onEventLevel(CCObject* sender) {
+    if (!Helper::s("CLonEventLevel")) {
+        CreatorLayer::onEventLevel(sender);
+        return;
+    }
+    auto page = DailyLevelPage::create(GJTimedLevelType::Event);
+    if (page) page->show();
+}
+
+void RECreatorLayer::onFeaturedLevels(CCObject* sender) {
+    if (!Helper::s("CLonFeaturedLevels")) {
+        CreatorLayer::onFeaturedLevels(sender);
+        return;
+    }
+    log::info("gay sex");
+    auto searchObj = GJSearchObject::create(SearchType::Featured);
+    auto scene = LevelBrowserLayer::scene(searchObj);
+    auto trans = CCTransitionFade::create(0.5f, scene);
+    CCDirector::sharedDirector()->pushScene(trans);
+}
+
+void RECreatorLayer::onGauntlets(CCObject* sender) {
+    if (!Helper::s("CLonGauntlets")) {
+        CreatorLayer::onGauntlets(sender);
+        return;
+    }
+    log::info("sesbian lex");
+    auto scene = GauntletSelectLayer::scene(1);
+    auto trans = CCTransitionFade::create(0.5f, scene);
+    CCDirector::sharedDirector()->pushScene(trans);
+}
+
 CCScene* RECreatorLayer::scene() {
     if (!Helper::s("CLscene")) {
         CreatorLayer::scene();
@@ -160,7 +193,7 @@ CreatorLayer* RECreatorLayer::create() {
         CreatorLayer::create();
         return nullptr;
     }
-    auto ret = new CreatorLayer();
+    auto ret = new RECreatorLayer();
     log::info("test");
     if (ret && ret->init()) {
         ret->autorelease();
@@ -237,9 +270,9 @@ bool RECreatorLayer::init() {
         {"GJ_mapBtn_001.png",           menu_selector(RECreatorLayer::onAdventureMap), true},
         {"GJ_dailyBtn_001.png",         menu_selector(RECreatorLayer::onDailyLevel)},
         {"GJ_weeklyBtn_001.png",        menu_selector(CreatorLayer::onWeeklyLevel)},
-        {"GJ_eventBtn_001.png",         menu_selector(CreatorLayer::onEventLevel)},
-        {"GJ_gauntletsBtn_001.png",     menu_selector(CreatorLayer::onGauntlets)},
-        {"GJ_featuredBtn_001.png",     menu_selector(CreatorLayer::onFeaturedLevels)},
+        {"GJ_eventBtn_001.png",         menu_selector(RECreatorLayer::onEventLevel)},
+        {"GJ_gauntletsBtn_001.png",     menu_selector(RECreatorLayer::onGauntlets)},
+        {"GJ_featuredBtn_001.png",     menu_selector(RECreatorLayer::onFeaturedLevels)},
         {"GJ_listsBtn_001.png",        menu_selector(CreatorLayer::onTopLists)},
         {"GJ_pathsBtn_001.png",        menu_selector(CreatorLayer::onPaths)},
         {"GJ_mapPacksBtn_001.png",     menu_selector(CreatorLayer::onMapPacks)},

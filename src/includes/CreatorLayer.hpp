@@ -14,6 +14,9 @@ class $modify(RECreatorLayer, CreatorLayer) {
     void onAdventureMap(CCObject* sender);
     void onChallenge(CCObject* sender);
     void onDailyLevel(CCObject* sender);
+    void onEventLevel(CCObject* sender);
+    void onFeaturedLevels(CCObject* sender);
+    void onGauntlets(CCObject* sender);
 
     CCScene* scene();
     CreatorLayer* create();

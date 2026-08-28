@@ -70,6 +70,21 @@
 			"name": "CreatorLayer onDailyLevel",
 			"default": false
 		},
+		"CLonEventLevel": {
+			"type": "bool",
+			"name": "CreatorLayer onEventLevel",
+			"default": false
+		},
+		"CLonFeaturedLevels": {
+			"type": "bool",
+			"name": "CreatorLayer onFeaturedLevels",
+			"default": false
+		},
+		"CLonGauntlets": {
+			"type": "bool",
+			"name": "CreatorLayer onGauntlets",
+			"default": false
+		},
 		"CLscene": {
 			"type": "bool",
 			"name": "CreatorLayer scene",
