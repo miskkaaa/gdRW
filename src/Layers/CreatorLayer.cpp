@@ -104,7 +104,7 @@ void RECreatorLayer::onBack(CCObject* sender) {
 
 void RECreatorLayer::onAdventureMap(CCObject* sender) {
     if (!Helper::s("CLonAdventureMap")) {
-        CreatorLayer::onChallenge(sender);
+        CreatorLayer::onAdventureMap(sender);
         return;
     }
     auto page = GJPromoPopup::create("mapPromo.png");
@@ -329,12 +329,28 @@ bool RECreatorLayer::init() {
 
     // float searchWidth = searchTemp ? searchTemp->getContentSize().width : 120.0f;
     float searchWidth = searchTemp->getContentSize().width;
-    float scaleF = std::max(0.9f, (ws.width - 100.f) / (searchWidth * 0.8f + 360.f));
+    /*
+        v11->setPosition_0(v8, v12);
+        v113 = 26112;
+        v114 = -1;
+        v8->setColor(&v8->cocos2d::CCRGBAProtocol, (const cocos2d::ccColor3B *)&v113);
+        v14 = (cocos2d::CCNode *)cocos2d::CCMenu::create(v13);
+        a1->addChild_1(a1, v14);
+        v15 = cocos2d::CCSprite::createWithSpriteFrameName("GJ_searchBtn_001.png");
+        v16 = fmaxf(0.89999998, (float)(v118 - 100.0) / (float)((float)(v15->m_obRect.size.width * 0.80000001) + 360.0));
+        if ( v16 > 1.0 )
+            v16 = 1.0;
+        v17 = v16 * 90.0;
+        cocos2d::CCPoint::CCPoint(&v116, v118 * 0.5, v119 * 0.5);
+        cocos2d::CCNode::convertToNodeSpace(v14, &v121);
+    */
+    float scaleF = fmaxf(0.89999998f, (ws.height - 100.f) / (searchWidth * 0.80000001f + 360.0f));
+    log::info("{}",scaleF);
     // v16 = fmaxf(0.89999998, (float)(v118 - 100.0) / (float)((float)(v15->m_obRect.size.width * 0.80000001) + 360.0));
     // like what the actual fuck
     scaleF = std::min(scaleF, 1.0f);
 
-    if (scaleF > 1.0f) scaleF = 1.0f;
+    // if (scaleF > 1.0f) scaleF = 1.0f;
     float spacing = scaleF * 90.f;
 
     log::info(
