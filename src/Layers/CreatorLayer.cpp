@@ -204,6 +204,8 @@ CreatorLayer* RECreatorLayer::create() {
 }
 
 bool RECreatorLayer::init() {
+    // non win: https://gd-src-raw.undefined0.dev/Geometry%20Dash/CreatorLayer__init.cpp
+    // win: https://gd-src-raw.undefined0.dev/GeometryDash.exe/CreatorLayer__init.cpp
     if (!Helper::s("CLinit")) {
         CreatorLayer::init();
         return true;
