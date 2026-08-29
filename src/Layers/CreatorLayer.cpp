@@ -121,6 +121,7 @@ void RECreatorLayer::onChallenge(CCObject* sender) {
         CreatorLayer::onChallenge(sender);
         return;
     }
+    static_cast<CCMenuItemSpriteExtra*>(sender)->getNormalImage()->removeAllChildren();
     auto page = ChallengesPage::create();
     if (page) page->show();
 }
@@ -381,10 +382,10 @@ bool RECreatorLayer::init() {
         {"GJ_savedBtn_001.png",         menu_selector(CreatorLayer::onSavedLevels)},
         {"GJ_highscoreBtn_001.png",     menu_selector(CreatorLayer::onLeaderboards)},
         {"GJ_challengeBtn_001.png",     menu_selector(RECreatorLayer::onChallenge), false, true},
-        {"GJ_versusBtn_001.png",        menu_selector(CreatorLayer::onMultiplayer), true},
+        {"GJ_versusBtn_001.png",        menu_selector(RECreatorLayer::onMultiplayer), true},
         {"GJ_mapBtn_001.png",           menu_selector(RECreatorLayer::onAdventureMap), true},
         {"GJ_dailyBtn_001.png",         menu_selector(RECreatorLayer::onDailyLevel)},
-        {"GJ_weeklyBtn_001.png",        menu_selector(CreatorLayer::onWeeklyLevel)},
+        {"GJ_weeklyBtn_001.png",        menu_selector(RECreatorLayer::onWeeklyLevel)},
         {"GJ_eventBtn_001.png",         menu_selector(RECreatorLayer::onEventLevel)},
         {"GJ_gauntletsBtn_001.png",     menu_selector(RECreatorLayer::onGauntlets)},
         {"GJ_featuredBtn_001.png",     menu_selector(RECreatorLayer::onFeaturedLevels)},
@@ -407,7 +408,7 @@ bool RECreatorLayer::init() {
             gray->m_luminance._Elems[1] = 0.33f;
             gray->m_luminance._Elems[2] = 0.33f;
             #else
-            gray->setEvenLuminance(0.33f);
+            gray->setEvenLuminance(1.0f);
             #endif
 
             gray->setColor({175, 175, 175});
