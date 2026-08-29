@@ -9,6 +9,8 @@
 // #include <Geode/binding/GJPromoPopup.hpp>
 // #include <Geode/binding/GameStatsManager.hpp>
 
+// #include <Geode/binding/PlatformToolbox.hpp>
+
 #include "../Helpers.hpp"
 
 void RECreatorLayer::checkQuestsStatus() {
@@ -351,7 +353,7 @@ bool RECreatorLayer::init() {
     log::info("{}", scaleF);
     // v16 = fmaxf(0.89999998, (float)(v118 - 100.0) / (float)((float)(v15->m_obRect.size.width * 0.80000001) + 360.0));
     // like what the actual fuck
-    scaleF = std::min(scaleF, 1.0f) - 0.0065f;
+    scaleF = std::min(scaleF, 1.0f) - 0.00625f;
 
     float buttonScale = 0.8f * scaleF;
     float spacing = scaleF * 90.f;
@@ -465,14 +467,14 @@ bool RECreatorLayer::init() {
     vaultB->setPosition(menu->convertToNodeSpace({ws.width - 22.0f, ws.height - 18.0f}));
     menu->addChild(vaultB);
 
-    if (diamonds <= 49) {
+    if (diamonds < 50) {
         float h = vault->getContentSize().height;
         float w = vault->getContentSize().width;
 
         auto icon = CCSprite::createWithSpriteFrameName("GJ_diamondsIcon_001.png");
         icon->setPosition({
             w * 0.5f + 9.0f,
-            h * 0.5f - 1.0f
+            h * -0.3f - 1.0f
         });
         icon->setScale(0.7f);
         vault->addChild(icon);
@@ -480,14 +482,19 @@ bool RECreatorLayer::init() {
         auto count = CCLabelBMFont::create("50", "bigFont.fnt");
         count->setPosition({
             w * 0.5f - 8.5f,
-            h * 0.5f
+            h * -0.3f
         });
         count->setScale(0.4f);
         vault->addChild(count);
     }
 
     bool unlocked = GameManager::sharedState()->getUGV("5");
-    const char* door = unlocked ? "secretDoorBtn_open_001.png" : "secretDoorBtn_closed_001.png";
+    const char* door; // = unlocked ? "secretDoorBtn_open_001.png" : "secretDoorBtn_closed_001.png";
+    if (unlocked) {
+        door = "secretDoorBtn_open_001.png";
+    } else {
+        door = "secretDoorBtn_closed_001.png";
+    }
     m_secretDoorSprite = CCSprite::createWithSpriteFrameName(door);
 
     auto doorbtn = CCMenuItemSpriteExtra::create(
@@ -505,7 +512,9 @@ bool RECreatorLayer::init() {
     backmenu->setPosition({dir->getScreenLeft() + 24.0f, dir->getScreenTop() - 23.0f});
     this->addChild(backmenu, 1);
 
-    GameToolbox::addBackButton(this, back);
+    if (PlatformToolbox::isControllerConnected()) {
+        GameToolbox::addBackButton(this, back);
+    }
 
     if (GameLevelManager::sharedState()) GameLevelManager::sharedState()->updateUserScore();
     return true;
