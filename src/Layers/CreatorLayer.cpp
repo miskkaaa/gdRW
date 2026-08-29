@@ -353,7 +353,7 @@ bool RECreatorLayer::init() {
     log::info("{}", scaleF);
     // v16 = fmaxf(0.89999998, (float)(v118 - 100.0) / (float)((float)(v15->m_obRect.size.width * 0.80000001) + 360.0));
     // like what the actual fuck
-    scaleF = std::min(scaleF, 1.0f) - 0.00625f;
+    scaleF = std::min(scaleF, 1.0f) - 0.006725f;
 
     float buttonScale = 0.8f * scaleF;
     float spacing = scaleF * 90.f;
