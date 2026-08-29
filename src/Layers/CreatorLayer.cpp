@@ -121,7 +121,10 @@ void RECreatorLayer::onChallenge(CCObject* sender) {
         CreatorLayer::onChallenge(sender);
         return;
     }
-    static_cast<CCMenuItemSpriteExtra*>(sender)->getNormalImage()->removeAllChildren();
+    auto item = static_cast<CCMenuItemSpriteExtra*>(sender);
+    auto normal = item->getNormalImage();
+    if (normal) normal->removeAllChildren();
+
     auto page = ChallengesPage::create();
     if (page) page->show();
 }
