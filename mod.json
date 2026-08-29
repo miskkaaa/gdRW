@@ -140,6 +140,12 @@
 			"description": "The paths button",
 			"default": false
 		},
+		"CLonMapPacks": {
+			"type": "bool",
+			"name": "CreatorLayer onMapPacks",
+			"description": "The Map packs button",
+			"default": false
+		},
 		"CLscene": {
 			"type": "bool",
 			"name": "CreatorLayer scene",
