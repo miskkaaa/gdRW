@@ -19,6 +19,13 @@ class $modify(RECreatorLayer, CreatorLayer) {
     void onGauntlets(CCObject* sender);
     void onMultiplayer(CCObject* sender);
     void onWeeklyLevel(CCObject* sender);
+    void onMyLevels(CCObject* sender);
+    void onSavedLevels(CCObject* sender);
+    void onLeaderboards(CCObject* sender);
+    void onTopLists(CCObject* sender);
+    void onOnlineLevels(CCObject* sender);
+    void onPaths(CCObject* sender);
+    void onMapPacks(CCObject* sender);
 
     CCScene* scene();
     CreatorLayer* create();

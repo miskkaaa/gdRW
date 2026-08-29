@@ -2,4 +2,6 @@
 The Worst Fucking Geometry Dash Rewrite You Will Ever See.
 
 im so ass at decompiling also :3
-# TODO: fix RECreatorLayer::init
+
+# Roadmap:
+- CreatorLayer: 90% (did everything on win, only android is left)

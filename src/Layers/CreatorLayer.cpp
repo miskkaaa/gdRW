@@ -12,6 +12,11 @@
 // #include <Geode/binding/PlatformToolbox.hpp>
 
 #include "../Helpers.hpp"
+#include "Geode/cocos/CCDirector.h"
+#include <Geode/Enums.hpp>
+#include <Geode/binding/GJPathsLayer.hpp>
+#include <Geode/binding/GJSearchObject.hpp>
+#include <Geode/binding/LevelBrowserLayer.hpp>
 
 void RECreatorLayer::checkQuestsStatus() {
     if (!Helper::s("CLcheckQuestsStatus")) {
@@ -192,65 +197,60 @@ void RECreatorLayer::onMultiplayer(CCObject* sender) {
         CreatorLayer::onMultiplayer(sender);
         return;
     }
-    auto title = "Erymanthos";
+    auto title = "The Keymaster";
     auto text = "Versus mode has been <co>delayed</c>,\nbut it's in the works!";
     // REMINDER: rename title's and fix case 5 :3
+    // fixed
     int bullshit = 2;
 
     switch (m_versusDialogIndex) {
         case 1:
             text = "Yea<d010>.<d010>.<d010>. It's still <cl>delayed</c>.";
-            title = "Erymanthos";
             bullshit = 2;
             break;
         case 2:
             text = "I blame <cg>RobTop</c>.";
-            title = "Erymanthuses Brother";
+            title = "Scratch";
             bullshit = 10;
             break;
         case 3:
             text = "Who else could we <cr>blame</c>?\nWe're not even real.";
-            title = "Erymanthos";
             bullshit = 2;
             break;
         case 4:
             text = "Speak for yourself <co>I'm real!</c>";
-            title = "Erymanthuses Brother";
+            title = "Scratch";
             bullshit = 14;
             break;
         case 5:
-            text = "<cl>Yea, a real pain in the<d010>.<d010>.<d010>. ass</c>";
-            title = "Erymanthos";
+            text = "<cl>Yea, a real pain in the<d010>.<d010>.<d010>.</c>";
             bullshit = 2;
             break;
         case 6:
             text = "You're just <cr>mad</c> because you don't have a <cy>shop</c>.";
-            title = "Erymanthuses Brother";
+            title = "Scratch";
             bullshit = 26;
             break;
         case 7:
             text = "You have a <cy>shop</c>?";
-            title = "Erymanthos";
             bullshit = 4;
             break;
         case 8:
             text = "<co>I HAVE SAID TOO MUCH!\nQUICKLY TO THE <i050><s260>CHOPPER!</s></i></c>";
-            title = "Erymanthuses Brother";
+            title = "Scratch";
             bullshit = 10;
             break;
         case 9:
             text = "You don't have a chop<d010>.<d010>.<d010>.";
-            title = "Erymanthos";
             bullshit = 2;
             break;
         case 10:
             text = ".<d010>.<d010>.";
-            title = "Erymanthuses Brother";
+            title = "Scratch";
             bullshit = 52;
             break;
         case 11:
             text = ".<d010>.<d010>.<d010>.<d010>.";
-            title = "Erymanthos";
             bullshit = 17;
             break;
         default:
@@ -268,6 +268,127 @@ void RECreatorLayer::onMultiplayer(CCObject* sender) {
 
     m_versusDialogIndex++;
     if (m_versusDialogIndex > 11) m_versusDialogIndex = 0;
+}
+
+void RECreatorLayer::onMyLevels(CCObject* sender) {
+    if (!Helper::s("CLonMyLevels")) {
+        CreatorLayer::onMyLevels(sender);
+        return;
+    }
+    auto gm = GameManager::sharedState();
+    auto st = gm->m_localSearchType;
+    log::info("onmylevels fuck");
+    auto search = GJSearchObject::create(st == SearchType::MyLists ? SearchType::MyLists : SearchType::MyLevels);
+    if (st != SearchType::MyLists) {
+        auto folder = gm->getIntGameVariable("0091");
+        if (folder > 999) {
+            folder = 999;
+        } else if (folder < 0){
+            folder = 0;
+        }
+
+        search->m_folder = folder;
+    }
+
+    auto scene = LevelBrowserLayer::scene(search);
+    auto trans = CCTransitionFade::create(0.5f, scene);
+
+    CCDirector::sharedDirector()->pushScene(trans);
+}
+
+void RECreatorLayer::onSavedLevels(CCObject* sender) {
+    if (!Helper::s("CLonSavedLevels")) {
+        CreatorLayer::onSavedLevels(sender);
+        return;
+    }
+
+    auto gm = GameManager::sharedState();
+    auto st = gm->m_savedSearchType;
+
+    auto search = GJSearchObject::create(st == SearchType::FavouriteLists ? SearchType::FavouriteLists : SearchType::SavedLevels);
+
+    auto folder = gm->getIntGameVariable("0092");
+    search->m_folder = std::clamp(folder, 0, 999);
+
+    auto scene = LevelBrowserLayer::scene(search);
+    auto trans = CCTransitionFade::create(0.5f, scene);
+
+    CCDirector::sharedDirector()->pushScene(trans);
+}
+
+void RECreatorLayer::onLeaderboards(CCObject* sender) {
+    if (!Helper::s("CLonLeaderboards")) {
+        CreatorLayer::onLeaderboards(sender);
+        return;
+    }
+
+    auto glm = GameLevelManager::sharedState();
+
+    auto scene = LeaderboardsLayer::scene(
+        glm->m_leaderboardType,
+        glm->m_leaderboardStat
+    );
+
+    auto trans = CCTransitionFade::create(0.5f, scene);
+    CCDirector::sharedDirector()->pushScene(trans);
+}
+
+void RECreatorLayer::onTopLists(CCObject* sender) {
+    if (!Helper::s("CLonTopLists")) {
+        CreatorLayer::onTopLists(sender);
+        return;
+    }
+
+    auto search = GJSearchObject::create(
+    static_cast<SearchType>(static_cast<int>(SearchType::Recent) |static_cast<int>(SearchType::MostLiked))
+    );
+    search->m_searchMode = 1;
+    auto scene = LevelBrowserLayer::scene(search);
+    auto trans = CCTransitionFade::create(0.5f, scene);
+
+    CCDirector::sharedDirector()->pushScene(trans);
+    GameManager::sharedState()->m_sceneEnum = 1;
+}
+
+void RECreatorLayer::onOnlineLevels(CCObject* sender) {
+    if (!Helper::s("CLonOnlineLevels")) {
+        CreatorLayer::onOnlineLevels(sender);
+        return;
+    }
+
+    auto searchType = GameManager::sharedState()->m_levelSearchType;
+    auto scene = LevelSearchLayer::scene(searchType);
+    auto trans = CCTransitionFade::create(0.5f, scene);
+
+    CCDirector::sharedDirector()->pushScene(trans);
+}
+
+void RECreatorLayer::onPaths(CCObject* sender) {
+    if (!Helper::s("CLonPaths")) {
+        CreatorLayer::onPaths(sender);
+        return;
+    }
+    auto page = GJPathsLayer::create();
+    if (page) page->show();
+}
+
+void RECreatorLayer::onMapPacks(CCObject* sender) {
+    if (!Helper::s("CLonMapPacks")) {
+        CreatorLayer::onMapPacks(sender);
+        return;
+    }
+    auto obj = GJSearchObject::create(
+        static_cast<SearchType>(
+            static_cast<int>(SearchType::Sends) |
+            static_cast<int>(SearchType::Downloaded)
+        )
+    );
+
+    auto scene = LevelBrowserLayer::scene(obj);
+    auto trans = CCTransitionFade::create(0.5f, scene);
+
+    CCDirector::sharedDirector()->pushScene(trans);
+    GameManager::sharedState()->m_sceneEnum = 1;
 }
 
 CCScene* RECreatorLayer::scene() {
@@ -381,9 +502,9 @@ bool RECreatorLayer::init() {
     };
 
     bi buttons[15] = {
-        {"GJ_createBtn_001.png",        menu_selector(CreatorLayer::onMyLevels)},
-        {"GJ_savedBtn_001.png",         menu_selector(CreatorLayer::onSavedLevels)},
-        {"GJ_highscoreBtn_001.png",     menu_selector(CreatorLayer::onLeaderboards)},
+        {"GJ_createBtn_001.png",        menu_selector(RECreatorLayer::onMyLevels)},
+        {"GJ_savedBtn_001.png",         menu_selector(RECreatorLayer::onSavedLevels)},
+        {"GJ_highscoreBtn_001.png",     menu_selector(RECreatorLayer::onLeaderboards)},
         {"GJ_challengeBtn_001.png",     menu_selector(RECreatorLayer::onChallenge), false, true},
         {"GJ_versusBtn_001.png",        menu_selector(RECreatorLayer::onMultiplayer), true},
         {"GJ_mapBtn_001.png",           menu_selector(RECreatorLayer::onAdventureMap), true},
@@ -392,10 +513,10 @@ bool RECreatorLayer::init() {
         {"GJ_eventBtn_001.png",         menu_selector(RECreatorLayer::onEventLevel)},
         {"GJ_gauntletsBtn_001.png",     menu_selector(RECreatorLayer::onGauntlets)},
         {"GJ_featuredBtn_001.png",     menu_selector(RECreatorLayer::onFeaturedLevels)},
-        {"GJ_listsBtn_001.png",        menu_selector(CreatorLayer::onTopLists)},
-        {"GJ_pathsBtn_001.png",        menu_selector(CreatorLayer::onPaths)},
-        {"GJ_mapPacksBtn_001.png",     menu_selector(CreatorLayer::onMapPacks)},
-        {"GJ_searchBtn_001.png",       menu_selector(CreatorLayer::onOnlineLevels), false, false, true}
+        {"GJ_listsBtn_001.png",        menu_selector(RECreatorLayer::onTopLists)},
+        {"GJ_pathsBtn_001.png",        menu_selector(RECreatorLayer::onPaths)},
+        {"GJ_mapPacksBtn_001.png",     menu_selector(RECreatorLayer::onMapPacks)},
+        {"GJ_searchBtn_001.png",       menu_selector(RECreatorLayer::onOnlineLevels), false, false, true}
     };
 
     for (int i = 0; i < 15; ++i) {

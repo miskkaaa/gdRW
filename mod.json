@@ -59,41 +59,85 @@
 		"CLonAdventureMap": {
 			"type": "bool",
 			"name": "CreatorLayer onAdventureMap",
+			"description": "The map button",
 			"default": false
 		},
 		"CLonChallenge": {
 			"type": "bool",
 			"name": "CreatorLayer onChallenge",
+			"description": "The quests button",
 			"default": false
 		},
 		"CLonDailyLevel": {
 			"type": "bool",
 			"name": "CreatorLayer onDailyLevel",
+			"description": "The daily button",
 			"default": false
 		},
 		"CLonEventLevel": {
 			"type": "bool",
 			"name": "CreatorLayer onEventLevel",
+			"description": "The event button",
 			"default": false
 		},
 		"CLonFeaturedLevels": {
 			"type": "bool",
 			"name": "CreatorLayer onFeaturedLevels",
+			"description": "The featured button",
 			"default": false
 		},
 		"CLonGauntlets": {
 			"type": "bool",
 			"name": "CreatorLayer onGauntlets",
+			"description": "The gauntlet button",
 			"default": false
 		},
 		"CLonWeekly": {
 			"type": "bool",
 			"name": "CreatorLayer onWeekly",
+			"description": "The weekly button",
 			"default": false
 		},
 		"CLonMultiplayer": {
 			"type": "bool",
 			"name": "CreatorLayer onMultiplayer",
+			"description": "The versus button",
+			"default": false
+		},
+		"CLonMyLevels": {
+			"type": "bool",
+			"name": "CreatorLayer onMyLevels",
+			"description": "The creator button",
+			"default": false
+		},
+		"CLonSavedLevels": {
+			"type": "bool",
+			"name": "CreatorLayer onSavedLevels",
+			"description": "The saved levels button",
+			"default": false
+		},
+		"CLonLeaderboards": {
+			"type": "bool",
+			"name": "CreatorLayer onLeaderboards",
+			"description": "The Scores button",
+			"default": false
+		},
+		"CLonTopLists": {
+			"type": "bool",
+			"name": "CreatorLayer onTopLists",
+			"description": "The lists button",
+			"default": false
+		},
+		"CLonOnlineLevels": {
+			"type": "bool",
+			"name": "CreatorLayer onOnlineLevels",
+			"description": "The search button",
+			"default": false
+		},
+		"CLonPaths": {
+			"type": "bool",
+			"name": "CreatorLayer onPaths",
+			"description": "The paths button",
 			"default": false
 		},
 		"CLscene": {
