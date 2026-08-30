@@ -169,6 +169,163 @@ void RECreatorLayer::onWeeklyLevel(CCObject* sender) {
     if (page) page->show();
 }
 
+void RECreatorLayer::onTreasureRoom(CCObject* sender) {
+    if (!Helper::s("CLonTreasureRoom")) {
+        CreatorLayer::onTreasureRoom(sender);
+        return;
+    }
+
+    auto stats = GameStatsManager::sharedState();
+    auto ws = CCDirector::sharedDirector()->getWinSize();
+    auto key = GameStatsManager::sharedState()->getStat("21");
+
+    if (GameManager::sharedState()->getUGV("5")) {
+        auto scene = SecretRewardsLayer::scene(false);
+        auto transition = CCTransitionFade::create(0.5f, scene);
+        CCDirector::sharedDirector()->replaceScene(transition);
+        return;
+    }
+
+    if (key < 5) {
+        std::string msg = "";
+        if (key <= 0) {
+            msg = "Bring me <cy>5</c> <cg>keys</c>,<d020>\n"
+            "and I will let you pass.";
+        } else {
+            auto rem = 5 - key;
+            auto text = fmt::format("Collect <cy>{}</c> more <cg>key{}</c>,<d020>\n"
+            "and I will let you pass.", rem, rem > 1 ? "s" : "");
+
+            msg = text;
+        }
+
+        auto dialobj = DialogObject::create(
+            "The Keymaster",
+            msg,
+            2,
+            1.0f,
+            false,
+            {255,255,255}
+        );
+
+        auto dial = DialogLayer::create(dialobj, 2);
+        this->addChild(dial, 100);
+        if (dial->m_mainLayer) dial->m_mainLayer->setPosition(ws * 0.5f);
+
+        dial->animateInRandomSide();
+        return;
+    }
+
+    auto objs = CCArray::create();
+
+    objs->addObject(DialogObject::create(
+        "The Keymaster",
+        "Well, well, well.<d035>\nLook who it is.",
+        2,
+        1.0f,
+        false,
+        {255, 255, 255}
+    ));
+
+    objs->addObject(DialogObject::create(
+        "The Keymaster",
+        "I see you have the <cg>keys</c>.<d040>\nBut what comes next?",
+        2,
+        1.0f,
+        false,
+        {255, 255, 255}
+    ));
+
+    objs->addObject(DialogObject::create(
+        "The Keymaster",
+        "The <co>door</c> is open.<d040>\n"
+        "Time to find out<d010>.<d010>.<d010>.",
+        2,
+        1.0f,
+        false,
+        {255, 255, 255}
+    ));
+
+    auto dialog = DialogLayer::createWithObjects(objs, 2);
+    dialog->setTag(0);
+    this->addChild(dialog, 100);
+
+    dialog->updateChatPlacement(DialogChatPlacement::Center);
+    dialog->animateIn(DialogAnimationType::FromLeft);
+
+    GameManager::sharedState()->setGameVariable("5", true);
+}
+
+void RECreatorLayer::onSecretVault(CCObject* sender) {
+    if (!Helper::s("CLonSecretVault")) {
+        CreatorLayer::onSecretVault(sender);
+        return;
+    }
+    auto gsm = GameStatsManager::sharedState();
+
+    if (gsm->getStat("13") < 50) {
+        auto index = m_vaultDialogIndex;
+        if (index >= 0) {
+            index++;
+        } else {
+            index = geode::utils::random::generate<int>(0,11);
+        }
+        m_vaultDialogIndex = index;
+
+        auto title = "The Keymaster";
+        auto text = "You are not ready...";
+
+        switch (index) {
+            case 1:
+                text = "I can't let you in.";
+                break;
+            case 2:
+                text = "Player used knock.<d040>\nIt's not very effective.";
+                break;
+            case 3:
+                text = "Don't you have something better to do?";
+                break;
+            case 4:
+                text = "That is a bad idea...";
+                break;
+            case 5:
+                text = ".<d030>.<d030>.";
+                break;
+            case 6:
+                text = "I guess you don't like rules...";
+                break;
+            case 7:
+                text = "RubRub told me not to let anyone in.";
+                break;
+            case 8:
+                text = "This is not the door you are looking for.";
+                break;
+            case 9:
+                text = "I don't understand why you keep clicking...";
+                break;
+            case 10:
+                text = "Trust me,<d030> you don't want to come in here.";
+                break;
+            default:
+                m_vaultDialogIndex = 0;
+                break;
+        }
+
+        auto layerObj = DialogObject::create(title, text, 2, 1.0f, true, {255, 255, 255});
+        auto layer = DialogLayer::create(layerObj, 2);
+        this->addChild(layer, 100);
+
+        auto ws = CCDirector::sharedDirector()->getWinSize();
+        if (layer->m_mainLayer) layer->m_mainLayer->setPosition(ws * 0.5f);
+
+        layer->animateInRandomSide();
+    } else {
+        auto scene = SecretLayer2::scene();
+        auto trans = CCTransitionFade::create(0.5f, scene);
+        CCDirector::sharedDirector()->replaceScene(trans);
+    }
+}
+
 void RECreatorLayer::onFeaturedLevels(CCObject* sender) {
     if (!Helper::s("CLonFeaturedLevels")) {
         CreatorLayer::onFeaturedLevels(sender);
@@ -500,7 +657,7 @@ bool RECreatorLayer::init() {
     struct bi {
         const char* frame;
         SEL_MenuHandler sel; // selector
-        const char* nodeid = nullptr;
+        const char* nodeid = nullptr; // node id
         bool gs = false; // grayscale
         bool iQ = false; // isQuests
         bool iS = false; // isSearch
@@ -599,7 +756,7 @@ bool RECreatorLayer::init() {
     this->addChild(vaultMenu);
 
     auto vault = CCSprite::createWithSpriteFrameName(vaultf);
-    auto vaultB = CCMenuItemSpriteExtra::create(vault, nullptr, this, menu_selector(CreatorLayer::onSecretVault));
+    auto vaultB = CCMenuItemSpriteExtra::create(vault, nullptr, this, menu_selector(RECreatorLayer::onSecretVault));
     vaultB->setID("vault-button");
     vaultB->setPosition(vaultMenu->convertToNodeSpace({ws.width - 22.0f,ws.height - 18.0f}));
     vaultMenu->addChild(vaultB);
@@ -639,7 +796,7 @@ bool RECreatorLayer::init() {
 
     m_secretDoorSprite = CCSprite::createWithSpriteFrameName(door);
 
-    auto doorbtn = CCMenuItemSpriteExtra::create(m_secretDoorSprite, nullptr, this, menu_selector(CreatorLayer::onTreasureRoom));
+    auto doorbtn = CCMenuItemSpriteExtra::create(m_secretDoorSprite, nullptr, this, menu_selector(RECreatorLayer::onTreasureRoom));
     doorbtn->setID("treasure-room-button");
     doorbtn->setPosition(doorMenu->convertToNodeSpace({ws.width - 22.0f, 24.0f}));
     doorMenu->addChild(doorbtn);

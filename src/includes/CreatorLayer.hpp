@@ -26,6 +26,8 @@ class $modify(RECreatorLayer, CreatorLayer) {
     void onOnlineLevels(CCObject* sender);
     void onPaths(CCObject* sender);
     void onMapPacks(CCObject* sender);
+    void onTreasureRoom(CCObject* sender);
+    void onSecretVault(CCObject* sender);
 
     CCScene* scene();
     CreatorLayer* create();

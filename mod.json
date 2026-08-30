@@ -80,6 +80,16 @@
 			"description": "The event button",
 			"default": false
 		},
+		"CLonTreasureRoom": {
+			"type": "bool",
+			"name": "CreatorLayer onTreasureRoom",
+			"default": false
+		},
+		"CLonSecretVault": {
+			"type": "bool",
+			"name": "CreatorLayer onSecretVault",
+			"default": false
+		},
 		"CLonFeaturedLevels": {
 			"type": "bool",
 			"name": "CreatorLayer onFeaturedLevels",
