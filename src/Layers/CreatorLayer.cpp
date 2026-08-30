@@ -400,6 +400,7 @@ CCScene* RECreatorLayer::scene() {
     if (!scene) return nullptr;
 
     auto layer = RECreatorLayer::create();
+    //layer->setID("CreatorLayer");
     if (!layer) return nullptr;
 
     scene->addChild(layer);
@@ -430,6 +431,7 @@ bool RECreatorLayer::init() {
     }
     if (!CCLayer::init()) return false;
     this->setKeypadEnabled(true);
+    this->setID("CreatorLayer");
     this->setKeyboardEnabled(true);
 
     auto dir = CCDirector::sharedDirector();
@@ -446,9 +448,11 @@ bool RECreatorLayer::init() {
     bg->setScaleX((ws.width + 10.f) / bg->getContentSize().width);
     bg->setScaleY((ws.height + 10.f) / bg->getContentSize().height);
     bg->setColor({0, 102, 255});
+    bg->setID("background");
     this->addChild(bg, -2);
 
     auto menu = CCMenu::create();
+    menu->setID("creator-buttons-menu");
     this->addChild(menu);
 
     auto searchTemp = CCSprite::createWithSpriteFrameName("GJ_searchBtn_001.png");
@@ -496,27 +500,28 @@ bool RECreatorLayer::init() {
     struct bi {
         const char* frame;
         SEL_MenuHandler sel; // selector
+        const char* nodeid = nullptr;
         bool gs = false; // grayscale
         bool iQ = false; // isQuests
         bool iS = false; // isSearch
     };
 
     bi buttons[15] = {
-        {"GJ_createBtn_001.png",        menu_selector(RECreatorLayer::onMyLevels)},
-        {"GJ_savedBtn_001.png",         menu_selector(RECreatorLayer::onSavedLevels)},
-        {"GJ_highscoreBtn_001.png",     menu_selector(RECreatorLayer::onLeaderboards)},
-        {"GJ_challengeBtn_001.png",     menu_selector(RECreatorLayer::onChallenge), false, true},
-        {"GJ_versusBtn_001.png",        menu_selector(RECreatorLayer::onMultiplayer), true},
-        {"GJ_mapBtn_001.png",           menu_selector(RECreatorLayer::onAdventureMap), true},
-        {"GJ_dailyBtn_001.png",         menu_selector(RECreatorLayer::onDailyLevel)},
-        {"GJ_weeklyBtn_001.png",        menu_selector(RECreatorLayer::onWeeklyLevel)},
-        {"GJ_eventBtn_001.png",         menu_selector(RECreatorLayer::onEventLevel)},
-        {"GJ_gauntletsBtn_001.png",     menu_selector(RECreatorLayer::onGauntlets)},
-        {"GJ_featuredBtn_001.png",     menu_selector(RECreatorLayer::onFeaturedLevels)},
-        {"GJ_listsBtn_001.png",        menu_selector(RECreatorLayer::onTopLists)},
-        {"GJ_pathsBtn_001.png",        menu_selector(RECreatorLayer::onPaths)},
-        {"GJ_mapPacksBtn_001.png",     menu_selector(RECreatorLayer::onMapPacks)},
-        {"GJ_searchBtn_001.png",       menu_selector(RECreatorLayer::onOnlineLevels), false, false, true}
+        {"GJ_createBtn_001.png",        menu_selector(RECreatorLayer::onMyLevels), "create-button"},
+        {"GJ_savedBtn_001.png",         menu_selector(RECreatorLayer::onSavedLevels), "saved-button"},
+        {"GJ_highscoreBtn_001.png",     menu_selector(RECreatorLayer::onLeaderboards), "scores-button"},
+        {"GJ_challengeBtn_001.png",     menu_selector(RECreatorLayer::onChallenge), "quests-button", false, true},
+        {"GJ_versusBtn_001.png",        menu_selector(RECreatorLayer::onMultiplayer), "versus-button", true},
+        {"GJ_mapBtn_001.png",           menu_selector(RECreatorLayer::onAdventureMap), "map-button", true},
+        {"GJ_dailyBtn_001.png",         menu_selector(RECreatorLayer::onDailyLevel), "daily-button"},
+        {"GJ_weeklyBtn_001.png",        menu_selector(RECreatorLayer::onWeeklyLevel), "weekly-button"},
+        {"GJ_eventBtn_001.png",         menu_selector(RECreatorLayer::onEventLevel), "event-button"},
+        {"GJ_gauntletsBtn_001.png",     menu_selector(RECreatorLayer::onGauntlets), "gauntlet-button"},
+        {"GJ_featuredBtn_001.png",     menu_selector(RECreatorLayer::onFeaturedLevels), "featured-button"},
+        {"GJ_listsBtn_001.png",        menu_selector(RECreatorLayer::onTopLists), "lists-button"},
+        {"GJ_pathsBtn_001.png",        menu_selector(RECreatorLayer::onPaths), "paths-button"},
+        {"GJ_mapPacksBtn_001.png",     menu_selector(RECreatorLayer::onMapPacks), "map-packs-button"},
+        {"GJ_searchBtn_001.png",       menu_selector(RECreatorLayer::onOnlineLevels), "search-button", false, false, true}
     };
 
     for (int i = 0; i < 15; ++i) {
@@ -548,6 +553,9 @@ bool RECreatorLayer::init() {
         auto btn = CCMenuItemSpriteExtra::create(
             spr, nullptr, this, buttons[i].sel
         );
+        if (buttons[i].nodeid) {
+            btn->setID(buttons[i].nodeid);
+        }
 
         int col = i % 5;
         int row = i / 5;
@@ -580,17 +588,21 @@ bool RECreatorLayer::init() {
         }
     }
 
-    Helper::sideart(this, {0.0f, 0.0f}, {dir->getScreenLeft() - 1.0f, dir->getScreenBottom() - 1.0f}, false, false, 1);
-    Helper::sideart(this, {0.0f, 1.0f}, {dir->getScreenLeft() - 1.0f, dir->getScreenTop() + 1.0f}, false, true, -1);
+    Helper::sideart(this, {0.0f, 0.0f}, {dir->getScreenLeft() - 1.0f, dir->getScreenBottom() - 1.0f}, false, false, 1, "bottom-left-corner");
+    Helper::sideart(this, {0.0f, 1.0f}, {dir->getScreenLeft() - 1.0f, dir->getScreenTop() + 1.0f}, false, true, -1, "top-left-corner");
 
     int diamonds = GameStatsManager::sharedState()->getStat("13");
     const char* vaultf = (diamonds >= 50) ? "GJ_lock_open_001.png" : "GJ_lockGray_001.png";
+
+    auto vaultMenu = CCMenu::create();
+    vaultMenu->setID("top-right-menu");
+    this->addChild(vaultMenu);
+
     auto vault = CCSprite::createWithSpriteFrameName(vaultf);
-    auto vaultB = CCMenuItemSpriteExtra::create(
-        vault, nullptr, this, menu_selector(CreatorLayer::onSecretVault)
-    );
-    vaultB->setPosition(menu->convertToNodeSpace({ws.width - 22.0f, ws.height - 18.0f}));
-    menu->addChild(vaultB);
+    auto vaultB = CCMenuItemSpriteExtra::create(vault, nullptr, this, menu_selector(CreatorLayer::onSecretVault));
+    vaultB->setID("vault-button");
+    vaultB->setPosition(vaultMenu->convertToNodeSpace({ws.width - 22.0f,ws.height - 18.0f}));
+    vaultMenu->addChild(vaultB);
 
     if (diamonds < 50) {
         float h = vault->getContentSize().height;
@@ -620,22 +632,33 @@ bool RECreatorLayer::init() {
     } else {
         door = "secretDoorBtn_closed_001.png";
     }
+
+    auto doorMenu = CCMenu::create();
+    doorMenu->setID("bottom-right-menu");
+    this->addChild(doorMenu);
+
     m_secretDoorSprite = CCSprite::createWithSpriteFrameName(door);
 
-    auto doorbtn = CCMenuItemSpriteExtra::create(
-        m_secretDoorSprite, nullptr, this, menu_selector(CreatorLayer::onTreasureRoom)
-    );
-    doorbtn->setPosition(menu->convertToNodeSpace({ws.width - 22.0f, 24.0f}));
-    menu->addChild(doorbtn);
+    auto doorbtn = CCMenuItemSpriteExtra::create(m_secretDoorSprite, nullptr, this, menu_selector(CreatorLayer::onTreasureRoom));
+    doorbtn->setID("treasure-room-button");
+    doorbtn->setPosition(doorMenu->convertToNodeSpace({ws.width - 22.0f, 24.0f}));
+    doorMenu->addChild(doorbtn);
 
     auto backspr = CCSprite::createWithSpriteFrameName("GJ_arrow_03_001.png");
     auto back = CCMenuItemSpriteExtra::create(
         backspr, nullptr, this, menu_selector(RECreatorLayer::onBack)
     );
+    back->setID("back-button");
 
     auto backmenu = CCMenu::create(back, nullptr);
     backmenu->setPosition({dir->getScreenLeft() + 24.0f, dir->getScreenTop() - 23.0f});
+    backmenu->setID("exit-menu");
+
     this->addChild(backmenu, 1);
+
+    auto bottomleft = CCMenu::create();
+    bottomleft->setID("bottom-left-menu");
+    this->addChild(bottomleft);
 
     if (PlatformToolbox::isControllerConnected()) {
         GameToolbox::addBackButton(this, back);
