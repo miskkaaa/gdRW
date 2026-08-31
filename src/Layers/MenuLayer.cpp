@@ -1,11 +1,4 @@
 #include "../Helpers.hpp"
-#include "Geode/cocos/CCDirector.h"
-#include "Geode/cocos/cocoa/CCObject.h"
-#include "Geode/cocos/platform/win32/CCApplication.h"
-#include "ccMacros.h"
-#include <Geode/binding/AppDelegate.hpp>
-#include <Geode/binding/GameManager.hpp>
-#include <Geode/binding/PlatformToolbox.hpp>
 #include "../includes/MenuLayer.hpp"
 
 void REMenuLayer::FLAlert_Clicked(FLAlertLayer* layer, bool btn2) {
