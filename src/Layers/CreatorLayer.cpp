@@ -126,8 +126,11 @@ void RECreatorLayer::onChallenge(CCObject* sender) {
         CreatorLayer::onChallenge(sender);
         return;
     }
+    log::info("sex");
     auto item = static_cast<CCMenuItemSpriteExtra*>(sender);
+    log::info("{}", item);
     auto normal = item->getNormalImage();
+    log::info("a {}", item->getChildren());
     if (normal) normal->removeAllChildren();
 
     auto page = ChallengesPage::create();
@@ -136,7 +139,7 @@ void RECreatorLayer::onChallenge(CCObject* sender) {
 
 void RECreatorLayer::onDailyLevel(CCObject* sender) {
     if (!Helper::s("CLonDailyLevel")) {
-        CreatorLayer::onChallenge(sender);
+        CreatorLayer::onDailyLevel(sender);
         return;
     }
     auto page = DailyLevelPage::create(GJTimedLevelType::Daily);
